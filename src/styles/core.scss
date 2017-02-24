@@ -20,16 +20,6 @@ body {
   box-sizing: inherit;
 }
 
-$primaryLightColor: #0078BC;
-$primaryDarkColor: #005A8F;
-$fontColor: #fff;
-
 body {
-  background: $primaryDarkColor center no-repeat;
-  background: -webkit-linear-gradient($primaryLightColor 50%, $primaryDarkColor 50%) center no-repeat; /* For Safari 5.1 to 6.0 */
-  background: -o-linear-gradient($primaryLightColor 50%, $primaryDarkColor 50%) center no-repeat; /* For Opera 11.1 to 12.0 */
-  background: -moz-linear-gradient($primaryLightColor 50%, $primaryDarkColor 50%) center no-repeat; /* For Firefox 3.6 to 15 */
-  background: linear-gradient($primaryLightColor 50%, $primaryDarkColor 50%) fixed center no-repeat; /* Standard syntax */
-  color: $fontColor;
-  
+  background: linear-gradient(to bottom right, $gray, $gray-light);
 }
