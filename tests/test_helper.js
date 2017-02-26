@@ -16,7 +16,7 @@ const $ = _$(window);
 
 chaiJquery(chai, chai.util, $);
 
-function renderComponent(ComponentClass, props = {}, state = {}) {
+function renderComponent (ComponentClass, props = {}, state = {}) {
   const componentInstance = TestUtils.renderIntoDocument(
     <Provider store={createStore(reducers, state)}>
       <ComponentClass {...props} />
@@ -26,7 +26,7 @@ function renderComponent(ComponentClass, props = {}, state = {}) {
   return $(ReactDOM.findDOMNode(componentInstance));
 }
 
-$.fn.simulate = function(eventName, value) {
+$.fn.simulate = function (eventName, value) {
   if (value) {
     this.val(value);
   }
