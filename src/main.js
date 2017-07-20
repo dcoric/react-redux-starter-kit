@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import { Router, Route, Switch } from 'react-router';
-import createBrowserHistory from 'history/createBrowserHistory';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Route } from 'react-router';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+
 import reduxThunk from 'redux-thunk';
 
 import App from './components/App';
 import Welcome from './components/Welcome';
+import Foo from './components/Foo';
 import ErrorPage from './components/ErrorPage';
 
 import reducers from './reducers';
@@ -16,10 +19,11 @@ import reducers from './reducers';
 // Store Instantiation
 // ========================================================
 
-const createStoreWithMiddleware = applyMiddleware(reduxThunk)(createStore);
-const store = createStoreWithMiddleware(reducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const history = createHistory();
+const middleware = routerMiddleware(history);
+const createStoreWithMiddleware = applyMiddleware(middleware, reduxThunk)(createStore);
 
-const history = createBrowserHistory();
+const store = createStoreWithMiddleware(combineReducers({...reducers, router: routerReducer}), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 // ========================================================
 // Render Setup
 // ========================================================
@@ -27,14 +31,12 @@ const MOUNT_NODE = document.getElementById('root');
 let render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={history}>
+      <ConnectedRouter history={history}>
         <App>
-          <Switch>
-            <Route exact path='/' component={Welcome} />
-            <Route component={ErrorPage} />
-          </Switch>
+          <Route exact path='/' component={Welcome} />
+          <Route exact path='/foo' component={Foo} />
         </App>
-      </Router>
+      </ConnectedRouter >
     </Provider>
     , MOUNT_NODE);
 };
