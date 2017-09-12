@@ -2,12 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import { Router, Route, Switch } from 'react-router';
+import { Router, Route, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import reduxThunk from 'redux-thunk';
 
 import App from './components/App';
 import Welcome from './components/Welcome';
+import FirstPage from './components/FirstPage';
+import SecondPage from './components/SecondPage';
 import ErrorPage from './components/ErrorPage';
 
 import reducers from './reducers';
@@ -31,6 +33,8 @@ let render = () => {
         <App>
           <Switch>
             <Route exact path='/' component={Welcome} />
+            <Route path='/first-page' component={FirstPage} />
+            <Route path='/second-page' component={SecondPage} />
             <Route component={ErrorPage} />
           </Switch>
         </App>
@@ -38,10 +42,7 @@ let render = () => {
     </Provider>
     , MOUNT_NODE);
 };
-// <App>
-//   <Switch>
-//   </Switch>
-// </App>
+
 // This code is excluded from production bundle
 if (__DEV__) {
   if (module.hot) {
