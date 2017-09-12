@@ -11,7 +11,7 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App';
 import Welcome from './components/Welcome';
 import Foo from './components/Foo';
-import ErrorPage from './components/ErrorPage';
+// import ErrorPage from './components/ErrorPage';
 
 import reducers from './reducers';
 
@@ -40,10 +40,7 @@ let render = () => {
     </Provider>
     , MOUNT_NODE);
 };
-// <App>
-//   <Switch>
-//   </Switch>
-// </App>
+
 // This code is excluded from production bundle
 if (__DEV__) {
   if (module.hot) {

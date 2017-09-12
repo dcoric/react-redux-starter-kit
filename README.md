@@ -1,4 +1,4 @@
-# One Stop Shop Starter Kit
+# React Starter Kit
 
 
 
