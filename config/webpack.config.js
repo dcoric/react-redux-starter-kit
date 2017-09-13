@@ -1,9 +1,9 @@
+require('babel-polyfill');
 const argv = require('yargs').argv;
 const webpack = require('webpack');
 const cssnano = require('cssnano');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-var ZipPlugin = require('zip-webpack-plugin');
 const project = require('./project.config');
 const debug = require('debug')('app:config:webpack');
 
@@ -33,6 +33,7 @@ const webpackConfig = {
 const APP_ENTRY = project.paths.client('main.js');
 
 webpackConfig.entry = {
+  main: 'babel-polyfill',
   app: __DEV__
     ? [APP_ENTRY].concat(`webpack-hot-middleware/client?path=${project.compiler_public_path}__webpack_hmr`)
     : [APP_ENTRY],
@@ -138,10 +139,27 @@ webpackConfig.module.rules = [{
 }];
 
 if (__PROD__) {
-  webpackConfig.module.rules.push({
-    test: /\.js$/,
-    loader: 'strip-loader?strip[]=alert,strip[]=console.log,strip[]=console.error,strip[]=console.warn'
-  });
+//   webpackConfig.module.rules.push({
+//     test: /\.js$/,
+//     loader: 'strip-loader?strip[]=alert,strip[]=console.log,strip[]=console.error,strip[]=console.warn'
+//   });
+  (function () {
+    try {
+      /* eslint-disable camelcase, no-throw-literal */
+      var $_console$$ = console;
+      Object.defineProperty(window, 'console', {
+        get: function () {
+          if ($_console$$._commandLineAPI) { throw 'Sorry, for security reasons, the script console is deactivated on netflix.com'; }
+          return $_console$$;
+        },
+        set: function ($val$$) {
+          $_console$$ = $val$$;
+        }
+      });
+      /* eslint-enable */
+    } catch ($ignore$$) {
+    }
+  })();
 }
 
 // ------------------------------------
@@ -299,6 +317,14 @@ webpackConfig.module.rules.push(
     }
   }
 )
+//   { test: /\.woff(\?.*)?$/,  loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff' },
+//   { test: /\.woff2(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff2' },
+//   { test: /\.otf(\?.*)?$/,   loader: 'file-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=font/opentype' },
+//   { test: /\.ttf(\?.*)?$/,   loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/octet-stream' },
+//   { test: /\.eot(\?.*)?$/,   loader: 'file-loader?prefix=fonts/&name=[path][name].[ext]' },
+//   { test: /\.svg(\?.*)?$/,   loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=image/svg+xml' },
+//   { test: /\.(png|jpg)$/,    loader: 'url-loader?limit=8192' }
+// )
 /* eslint-enable */
 
 // ------------------------------------
@@ -326,24 +352,6 @@ if (!__DEV__) {
     new ExtractTextPlugin({
       filename: '[name].[contenthash].css',
       allChunks: true
-    }),
-    new ZipPlugin({
-      path: 'target', // can be relative (to Webpack output path) or absolute
-      filename: 'deploy.zip', // if not present, the basename of the path
-      // pathPrefix: 'oss-web', // the prefix for the files included in the zip file
-      include: [/\.*$/], // can be a string, a RegExp, or an array of strings and RegExps
-      exclude: [/\.zip$/], // if a file matches both include and exclude, exclude takes precedence
-      // OPTIONAL: see https://github.com/thejoshwolfe/yazl#addfilerealpath-metadatapath-options
-      fileOptions: {
-        mtime: new Date(),
-        mode: parseInt('0100664', 8), // -rw-rw-r--
-        compress: true,
-        forceZip64Format: false
-      },
-      // OPTIONAL: see https://github.com/thejoshwolfe/yazl#endoptions-finalsizecallback
-      zipOptions: {
-        forceZip64Format: false
-      }
     })
   );
 }
