@@ -18,8 +18,8 @@
 * [eslint](http://eslint.org)
 
 ## Requirements
-* node `^8.0.0`
-* npm `^5.0.0`
+* node `^8.4.0`
+* npm `^5.3.0`
 
 ## Getting Started
 
